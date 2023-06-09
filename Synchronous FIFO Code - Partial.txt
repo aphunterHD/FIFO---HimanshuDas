@@ -1,0 +1,50 @@
+//Synchronous FIFO by Himanshu Das
+
+`timescale 1ns / 1ps
+
+module fifo(rst,clk,we,re,din,dout,empty,full,count,wptr,rptr);
+
+input rst,clk,we,re;
+input [7:0] din;
+output reg [7:0] dout;
+output empty,full;
+output reg [3:0] count;
+output reg [2:0] wptr;
+output reg [2:0] rptr;
+reg [7:0] mem [7:0];
+
+//Logic for empty and full determination [Partial]
+assign full= //Contact me;
+assign empty= //Contact me;
+
+//counter
+always@(posedge clk,posedge rst)
+begin
+if(rst) count<=0;
+else if((~full&&we)&&(~empty&&re)) count<=count;
+else if(~full&&we) count<=count+1;
+else if(~empty&&re) count<=count-1;
+else count<=count;
+end
+
+//reading
+always@(posedge clk,posedge rst)
+begin
+if(rst) begin dout<=0; end
+else begin if(re&&~empty) dout<=mem[rptr]; else dout<=dout; end
+end
+
+//writing
+always@(posedge clk)
+begin
+if(we&&~full) mem[wptr]<=din; else mem[wptr]<=mem[wptr]; end
+
+//pointer
+always@(posedge clk,posedge rst)
+begin
+if(rst) begin rptr<=0;wptr<=0; end
+else begin if(we&&~full) wptr<=wptr+1; else wptr<=wptr; if(re&&~empty) rptr<=rptr+1; else  rptr<=rptr; end
+end
+
+
+endmodule
