@@ -1,2 +1,8 @@
-# FIFO---HimanshuDas
+# FIFO implementation by Himanshu Das
 In this repository, I have implemented synchronous and asynchronous FIFO using Verilog HDL. Do check out the project related files for more details.
+
+Synchronous and Asynchronous FIFO -->
+
+A FIFO is at its core a RAM, which can be used to hold data while transmission between two sub-systems. When the subsystems operate at same clock frequency, then we can use a synchronous FIFO which is pretty straight forward in its design. However, in practical ICs there is SoC implementation and at certain places we are forced to transmit data between systems operating at different clock frequencies. Thus we need to use asynchronous FIFO, which is a bit more complex in design.
+FIFO circuit consists of a read and write pointer which are used to determine whether the memory is full or empty, it also gives an indication of the occupancy/availability of the memory between two sub-systems. If the state is full then we cannot write any further data in the memory and we should wait for the reader sub-system to read the already store data. Similarly, if the state is empty, this means the reader has to wait for the writer system to write new data into the memory. So, FIFO operations constitutes a regular comparsion of write and read pointer. 
+This comparison becomes complex in asynchronous design. Asychronous design will always result in timing violations during data transmission, but this violation occurs at repetitive instances. So, we need to include some circuitry to compensate for such violations by making sure we are obtaining the correct read and write pointer values to determine correct empty and full state of the FIFO. Synchronizers are generally used to take care of such violations. In this project, I have used two flop synchronizer for obtaining read and write pointers from systems operating a different clock frequencies.
