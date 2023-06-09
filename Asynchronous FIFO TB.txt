@@ -1,0 +1,79 @@
+//Asynchronous FIFO by Himanshu Das
+
+`timescale 1ns / 1ps
+
+module tb_fifoa();
+
+reg rst;
+reg clk1,we;
+reg [7:0] din;
+reg clk2,re;
+wire [7:0] dout;
+wire [3:0] wptr,rptrR;
+wire full;
+wire [3:0] rptr,wptrR;
+wire empty;
+wire [3:0] count;
+
+fifoa dut (rst,clk1,clk2,we,re,din,dout,empty,full,count,wptr,rptr,wptrR,rptrR);
+
+initial
+begin
+clk1=0;
+forever #5 clk1=~clk1;
+end
+
+initial
+begin
+clk2=0;
+forever #11 clk2=~clk2;
+end
+
+initial
+begin
+re=0; we=0;
+rst=1;
+#22 rst=0;
+
+#20 we=1;
+#7 din=8'h21;
+#10 din=8'h22;
+#10 din=8'h23;
+#10 din=8'h24;
+
+#10 din=8'h25;
+#10 din=8'h26;
+re=1;
+#10 din=8'h27;
+we=0;
+
+#160 re=0;
+
+#20 we=1;
+#10 din=8'h28;
+#10 din=8'h29;
+#10 din=8'h30;
+#10 din=8'h31;
+re=1;
+#10 din=8'h32;
+#10 din=8'h33;
+#10 din=8'h34;
+#10 din=8'h35;
+#10 din=8'h36;
+we=0;
+
+#10 din=8'h37;
+#10 din=8'h38;
+#10 din=8'h39;
+#10 din=8'h40;
+#10 din=8'h41;
+#10 din=8'h42;
+#10 din=8'h43;
+#10 din=8'h44;
+#10 din=8'h45;
+#10 din=8'h46;
+
+#80 $finish;
+end
+
+endmodule

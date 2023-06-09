@@ -1,0 +1,75 @@
+//Asynchronous FIFO by Himanshu Das
+
+`timescale 1ns / 1ps
+
+module fifoa(rst,clk1,clk2,we,re,din,dout,empty,full,count,wptr,rptr,wptrR,rptrR);
+
+input rst,clk1,clk2,we,re;
+input [7:0] din;
+output reg [7:0] dout;
+output empty,full;
+output reg [3:0] count;
+output reg [3:0] wptr;
+output reg [3:0] rptr;
+reg [3:0] iw,iwR,ir,irR;
+output reg [3:0] wptrR,rptrR;
+reg [7:0] mem [7:0];
+
+//Logic for generating wptrR
+always@(posedge clk1)
+begin
+iw<=wptr;
+end
+always@(posedge clk2)
+begin
+iwR<=iw;
+wptrR<=iwR;
+end
+
+//Logic for generating rptrR
+always@(posedge clk2)
+begin
+ir<=rptr;
+end
+always@(posedge clk1)
+begin
+irR<=ir;
+rptrR<=irR;
+end
+
+//Logic for full and empty indication [PARTIAL]
+assign full= //Contact me for details
+assign empty= //Contact me for details
+
+//counting stored places [PARTIAL]
+always@(posedge clk1,posedge rst)
+begin
+if(rst) count<=0;
+else begin
+if(wptr>=rptr) count<= //Contact me for details ; else count<= //Contact me for details; end
+end
+
+//reading
+always@(posedge clk2,posedge rst)
+begin
+if(rst) begin dout<=0; end
+else begin if(re&&~empty) dout<=mem[rptr[2:0]]; else dout<=dout; end
+end
+
+//writing
+always@(posedge clk1)
+begin
+if(we&&~full) mem[wptr[2:0]]<=din; else mem[wptr[2:0]]<=mem[wptr[2:0]]; end
+
+//pointer
+always@(posedge clk1,posedge rst)
+begin
+if(rst) begin rptr<=0;wptr<=0; end
+else begin if(we&&~full) wptr<=wptr+1; else wptr<=wptr; end
+end
+always@(posedge clk2)
+begin
+if(re&&~empty) rptr<=rptr+1; else  rptr<=rptr;
+end
+
+endmodule
